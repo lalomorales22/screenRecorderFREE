@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Screen Recorder</h5>
+            </div>
+            <div class="card-body">
+                <div class="recording-controls text-center mb-4">
+                    <div class="btn-group">
+                        <button id="startBtn" class="btn btn-primary">
+                            <i class="fas fa-record-vinyl me-2"></i>Start Recording
+                        </button>
+                        <button id="pauseBtn" class="btn btn-warning" disabled>
+                            <i class="fas fa-pause me-2"></i>Pause
+                        </button>
+                        <button id="stopBtn" class="btn btn-danger" disabled>
+                            <i class="fas fa-stop me-2"></i>Stop
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recording-options mb-4">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="audioToggle">
+                        <label class="form-check-label" for="audioToggle">
+                            Record with Microphone
+                        </label>
+                    </div>
+                </div>
+
+                <div id="preview" class="d-none">
+                    <video id="recordingPreview" controls class="w-100 mb-3"></video>
+                    <button id="saveBtn" class="btn btn-success">
+                        <i class="fas fa-save me-2"></i>Save Recording
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Recordings</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Filename</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recording in recordings %}
+                            <tr>
+                                <td>{{ recording.filename }}</td>
+                                <td>{{ recording.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    <a href="{{ url_for('download_recording', recording_id=recording.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <button onclick="deleteRecording({{ recording.id }})" 
+                                            class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/recorder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/ui.js') }}"></script>
+{% endblock %}
